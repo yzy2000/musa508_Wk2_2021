@@ -82,7 +82,7 @@ palette5 <- c("#f0f9e8","#bae4bc","#7bccc4","#43a2ca","#0868ac")
 
 # Load census API key
 
-census_api_key("YOUR API KEY GOES HERE", overwrite = TRUE)
+census_api_key("2b9294145b5160a675319efda2cdba7b5e3d4807", overwrite = TRUE)
 
 # ---- Year 2009 tracts -----
 
@@ -308,6 +308,19 @@ selectCentroids <-
 # Exercise - Can you create a small multiple map of the three types of operations?
 # Consult the text for some operations you can try
 # This is to be done in breakout groups
+myData  <- rbind(selectCentroids, clip) %>%
+  rbind(., selection)
+
+ggplot(myData)+
+  geom_sf(data = st_union(tracts09))+
+  geom_sf(aes(fill = q5(TotalPop))) +
+  scale_fill_manual(values = palette5,
+                    labels = qBr(myData, "TotalPop"),
+                    name = "Popluation\n(Quintile Breaks)") +
+  labs(title = "Total Population", subtitle = "Philadelphia; 2009") +
+  facet_wrap(~Selection_Type)+
+  mapTheme() + 
+  theme(plot.title = element_text(size=22))
 
 # ---- Indicator Maps ----
 
